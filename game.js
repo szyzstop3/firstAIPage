@@ -1,8 +1,7 @@
-import { SpeedInsights } from "@vercel/speed-insights/next";
-
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const menuScreen = document.getElementById('menuScreen');
+const startButton = document.getElementById('startButton');
 
 // 游戏状态
 let gameStarted = false;
@@ -42,6 +41,9 @@ let shootDelay = 250; // 射击间隔（毫秒）
 // 添加游戏时间计时器
 let gameTimer = 0;
 const VICTORY_TIME = 10; // 胜利需要坚持的秒数
+
+// 添加事件监听器
+startButton.addEventListener('click', startGame);
 
 // 开始游戏
 function startGame() {
