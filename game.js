@@ -34,10 +34,6 @@ let canShoot = true;
 let shootInterval;
 let shootDelay = 250; // 射击间隔（毫秒）
 
-// 在游戏状态部分添加图片对象
-const playerImg = new Image();
-playerImg.src = './pimg.webp';
-
 // 备用链接：
 // 'https://img.alicdn.com/imgextra/i4/O1CN01c26DBL1L3ADHsvGAM_!!6000000001243-2-tps-124-141.png'
 
@@ -113,21 +109,20 @@ function updatePlayer() {
     if (keys.up && player.y > 0) player.y -= player.speed;
     if (keys.down && player.y < canvas.height - player.height) player.y += player.speed;
 
-    // 使用图片绘制玩家，添加错误处理
-    try {
-        if (playerImg.complete) {
-            ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
-        } else {
-            // 如果图片未加载，使用默认的矩形
-            ctx.fillStyle = 'white';
-            ctx.fillRect(player.x, player.y, player.width, player.height);
-        }
-    } catch (error) {
-        console.error('绘制玩家图片时出错:', error);
-        // 使用默认的矩形作为备用
-        ctx.fillStyle = 'white';
-        ctx.fillRect(player.x, player.y, player.width, player.height);
-    }
+    // 绘制圆形玩家
+    ctx.beginPath();
+    ctx.arc(
+        player.x + player.width / 2,  // 圆心x坐标
+        player.y + player.height / 2,  // 圆心y坐标
+        player.width / 2,  // 半径
+        0,  // 开始角度
+        Math.PI * 2  // 结束角度
+    );
+    ctx.fillStyle = '#4CAF50';  // 设置填充颜色
+    ctx.fill();
+    ctx.strokeStyle = 'white';  // 设置边框颜色
+    ctx.lineWidth = 2;  // 设置边框宽度
+    ctx.stroke();
 }
 
 // 更新子弹
@@ -193,6 +188,36 @@ function checkCollisions() {
 
 // 碰撞检测辅助函数
 function collision(rect1, rect2) {
+    // 如果是玩家（圆形）与敌人（矩形）的碰撞
+    if (rect1 === player) {
+        const circleX = player.x + player.width / 2;
+        const circleY = player.y + player.height / 2;
+        const radius = player.width / 2;
+        
+        // 计算矩形的中心点
+        const rectCenterX = rect2.x + rect2.width / 2;
+        const rectCenterY = rect2.y + rect2.height / 2;
+        
+        // 计算圆心到矩形中心的距离
+        const distX = Math.abs(circleX - rectCenterX);
+        const distY = Math.abs(circleY - rectCenterY);
+        
+        // 如果距离大于圆的半径加上矩形的一半，则没有碰撞
+        if (distX > (rect2.width / 2 + radius)) return false;
+        if (distY > (rect2.height / 2 + radius)) return false;
+        
+        // 如果距离小于矩形的一半，则发生碰撞
+        if (distX <= rect2.width / 2) return true;
+        if (distY <= rect2.height / 2) return true;
+        
+        // 检查角落的碰撞
+        const cornerDistSq = Math.pow(distX - rect2.width / 2, 2) +
+                            Math.pow(distY - rect2.height / 2, 2);
+        
+        return (cornerDistSq <= Math.pow(radius, 2));
+    }
+    
+    // 子弹与敌人的碰撞保持不变
     return rect1.x < rect2.x + rect2.width &&
            rect1.x + 4 > rect2.x &&
            rect1.y < rect2.y + rect2.height &&
