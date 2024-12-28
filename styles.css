@@ -1,0 +1,17 @@
+canvas {
+    max-width: 100%;
+    height: auto;
+    touch-action: none; /* 防止默认的触摸行为 */
+}
+
+@media screen and (max-width: 768px) {
+    /* 移动端特定样式 */
+    .game-container {
+        padding: 10px;
+    }
+    
+    /* 调整游戏UI元素大小 */
+    .score {
+        font-size: 1.2em;
+    }
+} 

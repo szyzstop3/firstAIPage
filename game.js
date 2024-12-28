@@ -316,4 +316,24 @@ function victory() {
     const button = menuScreen.querySelector('button');
     button.parentNode.insertBefore(victoryElement, button);
     button.parentNode.insertBefore(scoreElement, button);
+}
+
+// 添加触摸事件监听
+canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+    handleInput(x, y);
+});
+
+// 修改handleInput方法以支持触摸
+function handleInput(x, y) {
+    // 将触摸坐标转换为游戏坐标
+    const gameX = (x / canvas.clientWidth) * canvas.width;
+    const gameY = (y / canvas.clientHeight) * canvas.height;
+    
+    // 处理游戏逻辑
+    // ...
 } 
