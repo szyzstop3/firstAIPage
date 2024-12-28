@@ -1,3 +1,5 @@
+import { SpeedInsights } from "@vercel/speed-insights/next";
+
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const menuScreen = document.getElementById('menuScreen');
@@ -43,17 +45,11 @@ const VICTORY_TIME = 10; // 胜利需要坚持的秒数
 
 // 开始游戏
 function startGame() {
-    // 确保图片已加载
-    if (!playerImg.complete) {
-        playerImg.onload = () => {
-            startGameCore();
-        };
-        return;
-    }
+    // 直接调用核心游戏启动函数
     startGameCore();
 }
 
-// 添加核心游戏启动函数
+// 修改核心游戏启动函数
 function startGameCore() {
     gameStarted = true;
     isAlive = true;
